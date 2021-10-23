@@ -10,25 +10,40 @@ const itemNum = 5
 const popup = document.querySelector('.popup')
 
 let timeLeft = 10
+let start = false
 
 
 // 1. 시작 버튼
 startBtn.addEventListener('click', ()=>{
     changeShape();
 })
-
-
-// - 버튼을 누르면 버튼의 모양이 바뀐다 < toggle 이용하기 
 function changeShape(){
-    if(startBtn.innerHTML === play){
+    if(start ===false){
+        startBtn.innerHTML = `${play}`
+        start = true
+    }else if (start === true){
         startBtn.innerHTML = `${stop}`
         randomItem()
         gameScore.innerHTML=itemNum
-    }else if (startBtn.innerHTML === stop){
-        startBtn.innerHTML = `${play}`
+        start = false
+
     }
 }
 changeShape();
+
+// - 버튼을 누르면 버튼의 모양이 바뀐다 < toggle 이용하기 
+// function changeShape(){
+//     if(startBtn.innerHTML === play){
+//         startBtn.innerHTML = `${stop}`
+//         randomItem()
+//         gameScore.innerHTML=itemNum
+//     }else if (startBtn.innerHTML === stop){
+//         startBtn.innerHTML = `${play}`
+//     }
+// }
+// changeShape();
+
+
 // - 버튼을 누르면 시간이 줄어든다
 function setGameTime(){
     gameTime.innerHTML=`0:${timeLeft}`
