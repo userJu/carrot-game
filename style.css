@@ -69,6 +69,7 @@ button {
   position: absolute;
   top: 400px;
   width: 400px;
+  visibility: hidden;
 }
 .popup__btn {
   border-radius: 10px;

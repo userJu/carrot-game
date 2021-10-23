@@ -7,6 +7,8 @@ const gameScore = document.querySelector('.game__numOfCarrots')
 const ground = document.querySelector('.ground');
 const groundRect = ground.getBoundingClientRect();
 const itemNum = 5
+const popup = document.querySelector('.popup')
+
 let timeLeft = 10
 
 
@@ -71,22 +73,27 @@ function addItem (className, count, imgPath, size){
 // 2. 벌레와 당근  
 // - 당근을 누르면 당근의 개수가 줄어드는 것이 표시된다
 ground.addEventListener('click', (e)=>{
-    const target =e.target
-    if(target.dataset.name === 'carrot'){
-        console.log('correct')
-        console.log(e)
-        target.remove()
+    const target =e.target.dataset.name
+    if(target=== 'carrot'){
+        e.target.remove()
     }else if(target === 'bug'){
-        console.log('false')
+        startBtn.innerHTML = `${stop}`
+        changeShape();
+        popupBox()
     }
-
-
 })
-function clickCorract(){
 
-}
-clickCorract()
+
 // - 벌레를 누르면 알람이 뜬다
+function popupBox(){
+    popup.style.visibility="visible";
+}
+// 알람의 return 버튼을 클릭하면 게임이 다시 시작된다
+const popupBtn = document.querySelector('.popup__btn');
+popupBtn.addEventListener('click', ()=>{
+    changeShape();
+    popup.style.visibility="hidden";
+})
 // - 제한 시간 내에 당근을 다 누르면 성공했다는 알람이 뜬다
 
 
