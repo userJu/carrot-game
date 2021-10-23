@@ -6,12 +6,14 @@ const gameTime = document.querySelector('.game__time')
 const gameScore = document.querySelector('.game__numOfCarrots')
 const ground = document.querySelector('.ground');
 const groundRect = ground.getBoundingClientRect();
+const itemNum = 5
+let timeLeft = 10
+
 
 // 1. 시작 버튼
 startBtn.addEventListener('click', ()=>{
     changeShape();
 })
-let timeLeft = 10
 
 
 // - 버튼을 누르면 버튼의 모양이 바뀐다 < toggle 이용하기 
@@ -19,6 +21,7 @@ function changeShape(){
     if(startBtn.innerHTML === play){
         startBtn.innerHTML = `${stop}`
         randomItem()
+        gameScore.innerHTML=itemNum
     }else if (startBtn.innerHTML === stop){
         startBtn.innerHTML = `${play}`
     }
@@ -36,14 +39,14 @@ function intervalFx (){
         const interval = setInterval(setGameTime, 1000)
         interval
 }
-console.log(setGameTime)
 
 
 // - 버튼을 누르면 벌레와 당근이 무작위로 ground에 생성된다
 
 function randomItem(){
-    addItem('carrot', 5, 'img/carrot.png', 80)
-    addItem('bug', 5, 'img/bug.png', 50)
+    ground.innerHTML='';
+    addItem('carrot', itemNum, 'img/carrot.png', 80)
+    addItem('bug', itemNum, 'img/bug.png', 50)
 }
 
 function addItem (className, count, imgPath, size){
@@ -53,6 +56,8 @@ function addItem (className, count, imgPath, size){
         const item = document.createElement('img');
         item.src=imgPath
         item.setAttribute('class', className)
+        item.setAttribute('data-name', className)
+
         ground.appendChild(item)
         const x = Math.floor(Math.random()*(width-size))
         const y = Math.floor(Math.random()*(height-size))
@@ -65,6 +70,23 @@ function addItem (className, count, imgPath, size){
 
 // 2. 벌레와 당근  
 // - 당근을 누르면 당근의 개수가 줄어드는 것이 표시된다
+ground.addEventListener('click', (e)=>{
+    const target =e.target
+    if(target.dataset.name === 'carrot'){
+        console.log('correct')
+        console.log(e)
+        target.remove()
+    }else if(target === 'bug'){
+        console.log('false')
+    }
+
+
+})
+function clickCorract(){
+
+}
+clickCorract()
+// - 벌레를 누르면 알람이 뜬다
 // - 제한 시간 내에 당근을 다 누르면 성공했다는 알람이 뜬다
 
 
