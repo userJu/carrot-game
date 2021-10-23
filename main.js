@@ -17,6 +17,8 @@ let start = false
 startBtn.addEventListener('click', ()=>{
     changeShape();
 })
+
+
 function changeShape(){
     if(start ===false){
         startBtn.innerHTML = `${play}`
@@ -48,14 +50,21 @@ changeShape();
 function setGameTime(){
     gameTime.innerHTML=`0:${timeLeft}`
     timeLeft--
-    if(timeLeft === -1 ){
-        console.log('게임 끝')
+
+}
+function intervalFunction(){
+    if(start ===true){
+        console.log('인터벌시작')
+    const interval = setInterval(setGameTime, 1000)
+    } else{
+    clearInterval(interval)
+    
+
     }
 }
-function intervalFx (){
-        const interval = setInterval(setGameTime, 1000)
-        interval
-}
+intervalFunction()
+
+
 
 
 // - 버튼을 누르면 벌레와 당근이 무작위로 ground에 생성된다
@@ -84,19 +93,30 @@ function addItem (className, count, imgPath, size){
 }
 
 
-
+let carrot = itemNum
 // 2. 벌레와 당근  
 // - 당근을 누르면 당근의 개수가 줄어드는 것이 표시된다
 ground.addEventListener('click', (e)=>{
     const target =e.target.dataset.name
     if(target=== 'carrot'){
+        carrot = ground.childElementCount-itemNum-1
         e.target.remove()
+        gameScore.innerHTML=carrot
+        carrotNum(carrot)
     }else if(target === 'bug'){
         startBtn.innerHTML = `${stop}`
         changeShape();
         popupBox()
     }
 })
+const popupInfo = document.querySelector('.result')
+
+function carrotNum(carrot){
+    if(carrot === 0){
+        popupInfo.innerHTML = 'congratulate!'
+        popupBox()
+    }
+}
 
 
 // - 벌레를 누르면 알람이 뜬다
