@@ -6,10 +6,19 @@ const gameTime = document.querySelector(".game__time");
 const gameScore = document.querySelector(".game__numOfCarrots");
 const ground = document.querySelector(".ground");
 const groundRect = ground.getBoundingClientRect();
-const itemNum = 5;
 const popup = document.querySelector(".popup");
+const popupInfo = document.querySelector(".result");
 
-let timeLeft = 10;
+const itemNum = 5;
+const gameSecond = 3;
+
+const alertSound = new Audio("sound/alert.wav");
+const bg = new Audio("sound/bg.mp3");
+const bug_pull = new Audio("sound/bug_pull.mp3");
+const carrot_pull = new Audio("sound/carrot_pull.mp3");
+const game_win = new Audio("sound/game_win.mp3");
+
+let timer = false;
 let start = false;
 
 // 1. 시작 버튼
@@ -20,42 +29,46 @@ startBtn.addEventListener("click", () => {
 function changeShape() {
   if (start === false) {
     startBtn.innerHTML = `${play}`;
-    start = true;
+    stopTimer();
+    popupBox();
+    soundStop(bg);
+    soundPlay(alertSound);
+    popupInfo.innerHTML = "REPLAY❔";
   } else if (start === true) {
     startBtn.innerHTML = `${stop}`;
+    popup.style.visibility = "hidden";
     randomItem();
+    gameTimer();
+    soundPlay(bg);
     gameScore.innerHTML = itemNum;
-    start = false;
   }
+  start = !start;
 }
-changeShape();
-
-// - 버튼을 누르면 버튼의 모양이 바뀐다 < toggle 이용하기
-// function changeShape(){
-//     if(startBtn.innerHTML === play){
-//         startBtn.innerHTML = `${stop}`
-//         randomItem()
-//         gameScore.innerHTML=itemNum
-//     }else if (startBtn.innerHTML === stop){
-//         startBtn.innerHTML = `${play}`
-//     }
-// }
-// changeShape();
 
 // - 버튼을 누르면 시간이 줄어든다
-function setGameTime() {
-  gameTime.innerHTML = `0:${timeLeft}`;
-  timeLeft--;
+function gameTimer() {
+  let time = gameSecond;
+  timer = setInterval(() => {
+    timeRemaining(time);
+    if (time <= 0) {
+      popupInfo.innerHTML = "Return😢";
+      changeShape();
+      popupBox();
+      clearInterval(intervalTime);
+      return;
+    }
+    time--;
+  }, 1000);
 }
-function intervalFunction() {
-  if (start === true) {
-    console.log("인터벌시작");
-    const interval = setInterval(setGameTime, 1000);
-  } else {
-    clearInterval(interval);
-  }
+
+function timeRemaining(time) {
+  const minute = Math.floor(time / 60);
+  const second = time % 60;
+  gameTime.innerHTML = `${minute}:${second}`;
 }
-intervalFunction();
+function stopTimer() {
+  clearInterval(timer);
+}
 
 // - 버튼을 누르면 벌레와 당근이 무작위로 ground에 생성된다
 
@@ -90,35 +103,55 @@ ground.addEventListener("click", (e) => {
   if (target === "carrot") {
     carrot = ground.childElementCount - itemNum - 1;
     e.target.remove();
+    soundPlay(carrot_pull);
     gameScore.innerHTML = carrot;
     carrotNum(carrot);
   } else if (target === "bug") {
     startBtn.innerHTML = `${stop}`;
+    soundPlay(bug_pull);
     changeShape();
+    stopTimer();
     popupInfo.innerHTML = "Return😢";
+    soundStop(bg);
+    soundPlay(alertSound);
     popupBox();
+  } else {
+    return;
   }
 });
-const popupInfo = document.querySelector(".result");
 
 function carrotNum(carrot) {
   if (carrot === 0) {
+    changeShape();
+    soundStop(bg);
+    soundStop(alertSound);
+    soundPlay(game_win);
     popupInfo.innerHTML = "congratulate!💕";
+    stopTimer();
     popupBox();
   }
 }
 
-// - 벌레를 누르면 알람이 뜬다
+// - 알람이 뜬다
 function popupBox() {
   popup.style.visibility = "visible";
 }
-// 알람의 return 버튼을 클릭하면 게임이 다시 시작된다
+// - 알람의 return 버튼을 클릭하면 게임이 다시 시작된다
 const popupBtn = document.querySelector(".popup__btn");
 popupBtn.addEventListener("click", () => {
   changeShape();
+
   popup.style.visibility = "hidden";
 });
-// - 제한 시간 내에 당근을 다 누르면 성공했다는 알람이 뜬다
+// - 음악 재생
+function soundPlay(sound) {
+  sound.play();
+}
+// - 음악 정지
+function soundStop(sound) {
+  sound.pause();
+  sound.currentTime = 0;
+}
 
 // 3. 제한시간
 // - 제한시간이 지나면 알람이 뜬다
