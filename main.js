@@ -20,6 +20,7 @@ const game_win = new Audio("sound/game_win.mp3");
 
 let timer = false;
 let start = false;
+let carrot = itemNum;
 
 // 1. 시작 버튼
 startBtn.addEventListener("click", () => {
@@ -54,7 +55,7 @@ function gameTimer() {
       popupInfo.innerHTML = "Return😢";
       changeShape();
       popupBox();
-      clearInterval(intervalTime);
+      clearInterval(timer);
       return;
     }
     time--;
@@ -95,7 +96,6 @@ function addItem(className, count, imgPath, size) {
   }
 }
 
-let carrot = itemNum;
 // 2. 벌레와 당근
 // - 당근을 누르면 당근의 개수가 줄어드는 것이 표시된다
 ground.addEventListener("click", (e) => {
