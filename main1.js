@@ -15,7 +15,14 @@ const popupResult = document.querySelector(".result");
 
 const itemNum = 5;
 
+const soundAlert = new Audio("sound/alert.wav");
+const soundBg = new Audio("sound/bg.mp3");
+const soundBug = new Audio("sound/bug_pull.mp3");
+const soundCarrot = new Audio("sound/carrot_pull.mp3");
+const soundWin = new Audio("sound/game_win.mp3");
+
 let start = false;
+let carrotNum = itemNum;
 
 gameStartBtn.addEventListener("click", gameState);
 function gameState() {
@@ -27,14 +34,17 @@ function gameState() {
   start = !start;
 }
 function gameStart() {
+  carrotNum = itemNum;
   buttonShape(stopShape);
   displayItems();
   intervalTime();
+  bgSound();
   visibility(gameStartBtn, "visible");
   console.log("시작");
 }
 function gameStop() {
   buttonShape(playShape);
+  bgSoundPause();
   deleteItems();
   intervalTimeStop();
   visibility(gameStartBtn, "hidden");
@@ -83,7 +93,7 @@ function intervalTime() {
 
 function intervalTimeStop() {
   clearInterval(interval);
-  showResult("RETURN❔");
+  showResult("RETURN❔", soundAlert);
 }
 function displayTime(countTime) {
   const minute = Math.floor(countTime / 60);
@@ -91,7 +101,8 @@ function displayTime(countTime) {
   gameTime.innerHTML = `${minute}:${second}`;
 }
 
-function showResult(message) {
+function showResult(message, alert) {
+  alert.play();
   visibility(popup, "visible");
   visibility(gameStartBtn, "hidden");
   popupResult.innerHTML = message;
@@ -99,7 +110,7 @@ function showResult(message) {
 }
 
 popupBtn.addEventListener("click", () => {
-  popup.style.visibility = "hidden";
+  visibility(popup, "hidden");
   start = true;
   gameStart();
 });
@@ -107,7 +118,6 @@ popupBtn.addEventListener("click", () => {
 function visibility(things, state) {
   things.style.visibility = state;
 }
-let carrotNum = itemNum;
 
 const gameCarrotsNum = document.querySelector(".game__numOfCarrots");
 ground.addEventListener("click", (e) => {
@@ -116,13 +126,25 @@ ground.addEventListener("click", (e) => {
   if (target.matches(".ground")) {
     return;
   } else if (target.matches(".carrot")) {
-    console.log("🥕");
+    soundCarrot.play();
     target.remove();
-
-    if (carrotNum === 0) {
-      console.log("끝");
+    carrotNum--;
+    if (carrotNum <= 0) {
+      gameStop();
+      soundWin.play();
+      showResult("🥕🐇");
     }
   } else {
-    console.log("🐛");
+    soundBug.play();
+    gameStop();
+    showResult("🐛");
   }
 });
+
+function bgSound() {
+  soundBg.play();
+}
+function bgSoundPause() {
+  soundBg.pause();
+  soundBg.currentTime = 0;
+}
