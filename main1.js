@@ -86,6 +86,7 @@ function intervalTime() {
     displayTime(countTime);
     countTime--;
     if (countTime < 0) {
+      bgSoundPause();
       intervalTimeStop();
     }
   }, 1000);
