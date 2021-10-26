@@ -38,7 +38,7 @@ function gameStart() {
   buttonShape(stopShape);
   displayItems();
   intervalTime();
-  bgSound();
+  Sound(soundBg);
   visibility(gameStartBtn, "visible");
   console.log("시작");
 }
@@ -103,7 +103,7 @@ function displayTime(countTime) {
 }
 
 function showResult(message, alert) {
-  alert.play();
+  Sound(soundAlert);
   visibility(popup, "visible");
   visibility(gameStartBtn, "hidden");
   popupResult.innerHTML = message;
@@ -127,23 +127,23 @@ ground.addEventListener("click", (e) => {
   if (target.matches(".ground")) {
     return;
   } else if (target.matches(".carrot")) {
-    soundCarrot.play();
+    Sound(soundCarrot);
     target.remove();
     carrotNum--;
     if (carrotNum <= 0) {
       gameStop();
-      soundWin.play();
       showResult("🥕🐇");
+      Sound(soundWin);
     }
   } else {
-    soundBug.play();
+    Sound(soundBug);
     gameStop();
     showResult("🐛");
   }
 });
 
-function bgSound() {
-  soundBg.play();
+function Sound(sound) {
+  sound.play();
 }
 function bgSoundPause() {
   soundBg.pause();
